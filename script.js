@@ -1,4 +1,4 @@
-//desconsiderar a url se formos usar outra api.
+//desconsiderar a url se formos usar outra api.aaaaaaa
 
 async function buscarClima(lat, lon) {
     const apiKey = "a94b7e2a5bd3005217739f65c2eafc7f"; // retirada do site do openWeather
