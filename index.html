@@ -1,18 +1,42 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clima Porto Alegre</title>
-    <link rel = "stylesheet" href = "style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <div id = "#app-clima">
-        <div class = "container-clima">
-            <div class = "header-clima">
+    <div id="app-clima">
+        <div class="container-clima">
+            <div class="header-clima">
                 <h1>Clima Tempo</h1>
-                <p class = "subtitulo-clima">Previsão do tempo em tempo real</p> 
+                <p class="subtitulo-clima">Previsão do tempo em tempo real</p>
+            </div>
+            <div class="container-busca-clima">
+                <form id="formulario-busca-clima" class="input-busca-clima">
+                    <input type="text" id="cityInput" placeholder="Buscar cidade (Ex: Curitiba)..." />
+                    <button type="submit" id="Buscar"></button>
+                </form>
+            </div>
+            <div class="container-clima-atual">
+                <h2>Cidade: <span id="cidade">--</span></h2>
+                <div id="weatherIcon" class="icone-clima"></div>
+                <p>Data: <span id="data">--</span></p>
+                <p>Temperatura: <span id="temperatura">--</span> °C</p>
+                <p>Clima: <span id="descricao">--</span></p>
+                <p>Sensaçao térmica: <span id="sensacao">--</span> °C</p>
+                <p>Umidade: <span id="umidade">--</span> %</p>
+                <p>Vento: <span id="vento">--</span> km/h</p>
+
             </div>
         </div>
+    </div>
+
+    <script src="script.js"></script>
+
 </body>
+
 </html>
