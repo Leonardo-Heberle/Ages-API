@@ -1,34 +1,34 @@
 //desconsiderar a url se formos usar outra api.aaaaaaa
 
 async function buscarClima(lat, lon) {
-    const apiKey = "a94b7e2a5bd3005217739f65c2eafc7f"; // retirada do site do openWeather
-    // coordenadas para porto alegre
     const lat = -30.03;
     const lon = -51.23
-    const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=metric&lang=pt_br&appid=${apiKey}`;
-
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`;
     try {
         const resposta = await fetch(url);
+        const data = await Response.json();
 
-        if (!resposta.ok) {
-            throw new Error("Erro ao buscar dados ");
+        const temp = data.current.temperature_2m;
+        const code = data.current.weather_code;
 
-            const data = await resposta.json();
-            atualizarInterface(data);
-        }
-    }catch (erro) {
-        console.error("Erro ao buscar clima:", error);
+        console.log(`Temperatura em POA: ${temp}°C`);
+        console.log(`Código do tempo (WMO): ${code}`);
+
+        exibirNaTela(temp, code);
+    } catch (error) {
+        console.error("Erro ao buscar dados:", error);
     }
 }
 
-
-function atualizarInterface(data) {
-    const temp = dados.current.tempo;
-    const sensacao = data.current.feels_like;
-    const descricao = data.current.weather[0].description;
-    const icone = data.current.weather[0].icon;
-
-    document.getElementById('temp').innerText = `${Math.round(temp)}°C`;
-    document.getElementById('desc').innerText = descricao;
-    document.getElementById('icon').src = `https://openweathermap.org/img/wn/${icone}@2x.png`;
+function traduzirCodigoTempo(codigo) {
+    const interpretacao = {
+        0: "Céu limpo",
+        1: "Principalmente limpo",
+        2: "Parcialmente nublado",
+        3: "Encoberto",
+        45: "Nevoeiro",
+        61: "Chuva leve",
+        // Adicione os outros códigos da tabela que você postou...
+    };
+    return interpretacao[codigo] || "Condição desconhecida";
 }
