@@ -6,17 +6,20 @@ async function buscarClima(lat, lon) {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`;
     try {
         const resposta = await fetch(url);
-        const data = await Response.json();
+        if(!resposta.ok) throw new Error("Erro ao acessar a API");
+        const data = await resposta.json();
 
         const temp = data.current.temperature_2m;
         const code = data.current.weather_code;
+        const umidade = data.current.relative.humidity_2m;
+        const vento = data.current.wind_speed_10m;
 
         console.log(`Temperatura em POA: ${temp}°C`);
-        console.log(`Código do tempo (WMO): ${code}`);
 
-        exibirNaTela(temp, code);
+        exibirNaTela(temp, code, umidade, vento);
     } catch (error) {
         console.error("Erro ao buscar dados:", error);
+        document.getElementById('condition').textContent = "Erro ao carregar Dados";
     }
 }
 
@@ -27,8 +30,18 @@ function traduzirCodigoTempo(codigo) {
         2: "Parcialmente nublado",
         3: "Encoberto",
         45: "Nevoeiro",
+        51: "Garoa leve",
         61: "Chuva leve",
-        // Adicione os outros códigos da tabela que você postou...
+        63: "Chuva moderada",
+        80: "Pancadas de chuva",
+        95: "Trovoada"
     };
     return interpretacao[codigo] || "Condição desconhecida";
+}
+
+function exibirNaTela(temp, code, umidade, vento) {
+    document.getElementById('cityName').textContent = "Porto Alegre";
+    document.getElementById('temperature').textContent = `${Math.round(temp)}°`;
+    document.getElementById('condition').textContent = traduzirCodigoTempo(code);
+
 }
