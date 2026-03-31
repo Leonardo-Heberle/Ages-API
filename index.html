@@ -1,18 +1,40 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clima Porto Alegre</title>
-    <link rel = "stylesheet" href = "style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <div id = "#app-clima">
-        <div class = "container-clima">
-            <div class = "header-clima">
+    <div id="app-clima">
+        <div class="container-clima">
+            <div class="header-clima">
                 <h1>Clima Tempo</h1>
-                <p class = "subtitulo-clima">Previsão do tempo em tempo real</p> 
+                <p class="subtitulo-clima">Previsão do tempo em tempo real</p>
+            </div>
+            <div class="container-busca-clima">
+                <form id="formulario-busca-clima" class="input-busca-clima">
+                    <input type="text" id="cityInput" placeholder="Buscar cidade (Ex: Curitiba)..." />
+                    <button type="submit" id="Buscar"></button>
+                </form>
+            </div>
+            <div class="container-clima-atual">
+                <h2 id="nomeCidade">Cidade</h2>
+                <p id="data-clima">31/03/2026</p>
+                <div id="weatherIcon" class="icone-clima"></div>
+                <p id="temperatura">Temperatura: -- °C</p>
+                <p id="descricao">Clima: --</p>
+                <p id="sensacao">Sensação térmica: -- °C</p>
+                <p id="umidade">Umidade: -- %</p>
+                <p id="vento">Vento: -- km/h</p>
+
             </div>
         </div>
+    </div>
+
 </body>
+
 </html>
