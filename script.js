@@ -2,7 +2,7 @@
 async function buscarClima() {
     //coordenadas mockadas,
     const lat = -30.03;
-    const lon = -51.23
+    const lon = -51.23;
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m,apparent_temperature&timezone=auto`;
     try {
         const resposta = await fetch(url);
