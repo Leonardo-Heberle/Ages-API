@@ -33,12 +33,12 @@
 }
 
 /* === CABEÇALHO === */
-.cabecalho-clima {
+.header-clima {
   text-align: center;
   margin-bottom: 2rem; /* Espaço abaixo do cabeçalho */
 }
 
-.cabecalho-clima h1 {
+.header-clima h1 {
   font-size: 3rem; /* Tamanho grande do título */
   font-weight: bold;
   color: white;
@@ -161,12 +161,12 @@
 }
 
 /* Cabeçalho do card (nome da cidade e data) */
-.cabecalho-card-clima {
+.header-card-clima {
   text-align: center;
   margin-bottom: 2rem;
 }
 
-.cabecalho-card-clima h2 {
+.header-card-clima h2 {
   font-size: 1.875rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
@@ -342,7 +342,7 @@
 }
 
 /* === NOTA DE RODAPÉ === */
-.nota-rodape-clima {
+.nota-footer-clima {
   margin-top: 3rem;
   text-align: center;
   color: rgba(
@@ -355,7 +355,7 @@
   max-width: 28rem;
 }
 
-.nota-rodape-clima code {
+.nota-footer-clima code {
   background: rgba(
     255,
     255,
@@ -364,25 +364,4 @@
   ); /* Fundo para destaque de código */
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
-}
-
-/* === RESPONSIVIDADE === */
-/* Ajustes para telas pequenas (celulares) */
-@media (max-width: 640px) {
-  .cabecalho-clima h1 {
-    font-size: 2rem; /* Título menor em telas pequenas */
-  }
-
-  .card-clima {
-    padding: 1.5rem; /* Menos padding */
-  }
-
-  .temperatura-clima {
-    font-size: 3rem; /* Temperatura menor */
-  }
-
-  .icone-clima {
-    width: 4rem; /* Ícone menor */
-    height: 4rem;
-  }
 }
