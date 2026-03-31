@@ -1,0 +1,23 @@
+body{
+    background-color: rgb(15, 113, 188);
+}
+h1{
+    color: white;
+    display:flex ;
+    justify-content: center;
+    text-transform: uppercase;
+    
+}
+
+textarea{
+    display: block;
+    margin: auto;   
+    background-color: white;
+    border-radius: 2rem;
+    color:black;
+    padding: 1rem;
+    border: 1px solid white;
+    resize: none;
+
+
+}
