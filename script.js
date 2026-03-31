@@ -1,4 +1,4 @@
-//desconsiderar a url se formos usar outra api.aaaaaaa
+//desconsiderar a url se formos usar outra api.
 
 async function buscarClima(lat, lon) {
     const lat = -30.03;
