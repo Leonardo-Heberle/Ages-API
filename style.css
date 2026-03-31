@@ -1,0 +1,329 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#clima-tempo-app {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #38bdf8 0%, #3b82f6 50%, #6366f1 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.container-principal {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Header */
+.clima-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.clima-header h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.clima-subtitle {
+    color: #dbeafe;
+    font-size: 1.125rem;
+}
+
+/* Barra de Busca */
+.clima-search-container {
+    width: 100%;
+    max-width: 28rem;
+    margin-bottom: 2rem;
+}
+
+.clima-search-form {
+    position: relative;
+}
+
+.clima-search-input {
+    width: 100%;
+    padding: 1rem 3.5rem 1rem 1.5rem;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: none;
+    font-size: 1rem;
+    color: #1f2937;
+    outline: none;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.clima-search-input::placeholder {
+    color: #6b7280;
+}
+
+.clima-search-input:focus {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+.clima-search-button {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #3b82f6;
+    border: none;
+    border-radius: 9999px;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.clima-search-button:hover {
+    background: #2563eb;
+}
+
+/* Mensagem de Erro */
+.clima-error-message {
+    background: rgba(239, 68, 68, 0.9);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    max-width: 28rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.clima-error-message.hidden {
+    display: none;
+}
+
+/* Conteudo do Clima */
+.clima-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+}
+
+/* Cartao do Clima */
+.clima-card {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    color: white;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    max-width: 28rem;
+}
+
+.clima-card-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.clima-card-header h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.clima-date {
+    color: #dbeafe;
+    font-size: 0.875rem;
+}
+
+.clima-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.clima-icon {
+    width: 6rem;
+    height: 6rem;
+    margin-right: 1.5rem;
+}
+
+.clima-temperature-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.clima-temperature {
+    font-size: 3.75rem;
+    font-weight: bold;
+}
+
+.clima-condition {
+    font-size: 1.25rem;
+    color: #dbeafe;
+    margin-top: 0.5rem;
+}
+
+.clima-feels-like {
+    font-size: 0.875rem;
+    color: #bfdbfe;
+    margin-top: 0.25rem;
+}
+
+.clima-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(219, 234, 254, 0.3);
+}
+
+.clima-detail-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.clima-detail-item svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #bfdbfe;
+}
+
+.clima-detail-label {
+    font-size: 0.875rem;
+    color: #dbeafe;
+}
+
+.clima-detail-value {
+    font-weight: 600;
+    margin-top: 0.25rem;
+}
+
+/* Secao de Previsao */
+.clima-forecast-section {
+    width: 100%;
+    max-width: 56rem;
+}
+
+.clima-forecast-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: white;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.clima-forecast-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .clima-forecast-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.clima-forecast-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+.clima-forecast-card:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.clima-forecast-day {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+}
+
+.clima-forecast-icon {
+    width: 2rem;
+    height: 2rem;
+}
+
+.clima-forecast-condition {
+    font-size: 0.75rem;
+    color: #dbeafe;
+    margin-top: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.clima-forecast-temps {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.clima-forecast-max {
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.clima-forecast-min {
+    font-size: 0.875rem;
+    color: #bfdbfe;
+}
+
+/* Footer Note */
+.clima-footer-note {
+    margin-top: 3rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    max-width: 28rem;
+}
+
+.clima-footer-note code {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+/* Responsivo */
+@media (max-width: 640px) {
+    .clima-header h1 {
+        font-size: 2rem;
+    }
+
+    .clima-card {
+        padding: 1.5rem;
+    }
+
+    .clima-temperature {
+        font-size: 3rem;
+    }
+
+    .clima-icon {
+        width: 4rem;
+        height: 4rem;
+    }
+}
