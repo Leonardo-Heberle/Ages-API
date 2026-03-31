@@ -1,24 +1,28 @@
 //desconsiderar a url se formos usar outra api.
-async function buscarClima(lat, lon) {
+async function buscarClima() {
+    //coordenadas mockadas,
     const lat = -30.03;
     const lon = -51.23
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m,apparent_temperature&timezone=auto`;
     try {
         const resposta = await fetch(url);
         if (!resposta.ok) throw new Error("Erro ao acessar a API");
+
         const data = await resposta.json();
 
         const temp = data.current.temperature_2m;
         const code = data.current.weather_code;
-        const umidade = data.current.relative.humidity_2m;
+        const umidade = data.current.relative_humidity_2m;
         const vento = data.current.wind_speed_10m;
+        const sensacao = data.current.apparent_temperature;
 
-        console.log(`Temperatura em POA: ${temp}°C`);
+        console.log(`Dados recebidos - Temp: ${temp}, Code: ${code}, Sensacao: ${sensacao}`);
 
-        exibirNaTela(temp, code, umidade, vento);
+        exibirNaTela(temp, code, umidade, vento, sensacao);
     } catch (error) {
         console.error("Erro ao buscar dados:", error);
-        document.getElementById('condition').textContent = "Erro ao carregar Dados";
+        const elCondicao = document.getElementById('descricao')
+        if (elCondicao) elCondicao.textContent = "Erro ao carregar dados";
     }
 }
 
@@ -52,45 +56,40 @@ function getOpenWeatherIcon(codigoMeteo) { //isso aqui pega o codigo do openMete
         80: "09d", // Pancadas de chuva
         95: "11d"  // Trovoada -> thunderstorm.png
     };
-
     // Pega o código da imagem ou usa "01d" (sol) como padrão de segurança
     const iconCode = mapeamento[codigoMeteo] || "01d";
     const url = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-    
-    console.log("Código da API:", codigoMeteo, "URL gerada:", url); // Verifique isso no Console (F12)
     return url;
 }
 
 
-function exibirNaTela(temp, code, umidade, vento) {
+function exibirNaTela(temp, code, umidade, vento, sensacao) {
     // 1. Localizar os elementos do DOM (IDs do seu HTML)
-    const elCidade = document.getElementById('cityName');
-    const elTemp = document.getElementById('temperature');
-    const elCondicao = document.getElementById('condition');
+    const elCidade = document.getElementById('cidade');
+    const elTemp = document.getElementById('temperatura');
+    const elCondicao = document.getElementById('descricao');
     const elIcone = document.getElementById('weatherIcon'); // O ID da div .icone-clima
-    const elUmidade = document.getElementById('humidity');
-    const elVento = document.getElementById('windSpeed');
-    const elData = document.getElementById('currentDate');
+    const elUmidade = document.getElementById('umidade');
+    const elVento = document.getElementById('vento');
+    const elData = document.getElementById('data');
+    const elSensacao = document.getElementById('sensacao');
 
     // 2. Traduzir e buscar o ícone da OpenWeather (usando a função que criamos)
     const textoCondicao = traduzirCodigoTempo(code);
     const urlIcone = getOpenWeatherIcon(code);
 
-    console.log(`[Debug] Temp: ${temp}, Code: ${code}, URL: ${urlIcone}`);
-
     // 3. Atualizar os textos na tela
     if (elCidade) elCidade.textContent = "Porto Alegre";
-    if (elTemp) elTemp.textContent = `${Math.round(temp)}°`;
+    if (elTemp) elTemp.textContent = `${Math.round(temp)}`;
     if (elCondicao) elCondicao.textContent = textoCondicao;
-    if (elUmidade) elUmidade.textContent = `${umidade}%`;
-    if (elVento) elVento.textContent = `${vento} km/h`;
+    if (elUmidade) elUmidade.textContent = `${Math.round(umidade)}`;
+    if (elVento) elVento.textContent = `${Math.round(vento)}`;
+    if (elSensacao) elSensacao.textContent = sensacao;
 
     // 4. Injetar o ícone corretamente
     if (elIcone) {
         // Inserimos a imagem com uma classe para você controlar no CSS se precisar
-        elIcone.innerHTML = `<img src="${urlIcone}" alt="${textoCondicao}" class="weather-img">`;
-    } else {
-        console.error("Erro: O elemento #weatherIcon não foi encontrado no HTML.");
+        elIcone.innerHTML = `<img src="${urlIcone}" alt="${textoCondicao}" class="icone-clima">`;
     }
 
     // 5. Atualizar a data (opcional, mas deixa o layout do Figma completo)
@@ -100,4 +99,6 @@ function exibirNaTela(temp, code, umidade, vento) {
         elData.textContent = hoje.toLocaleDateString('pt-BR', opcoes);
     }
 }
+
+document.addEventListener('DOMContentLoaded', buscarClima);
 
