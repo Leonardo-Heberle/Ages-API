@@ -1,10 +1,31 @@
 //desconsiderar a url se formos usar outra api.
-async function buscarClima() {
-    //coordenadas mockadas,
-    const lat = -30.03;
-    const lon = -51.23
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m,apparent_temperature&timezone=auto`;
+async function buscarClima(cidade) {
     try {
+        const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cidade)}`;
+        const geoResp = await fetch(geoUrl);
+
+        if (!geoResp.ok) throw new Error("Erro ao buscar cidade");
+
+        const geoData = await geoResp.json();
+
+        if (!geoData.results || geoData.results.length === 0) {
+            throw new Error("Cidade não encontrada");
+        }
+
+        const resultValido = geoData.results.find(lugar =>
+            normalizaTexto(lugar.name).includes(normalizaTexto(cidade))
+        );
+
+        if(!resultValido){
+            throw new Error("cidade não encontrada");
+        }
+
+        const { latitude, longitude, name } = resultValido;
+
+
+    
+     const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m,apparent_temperature&timezone=auto`;
+
         const resposta = await fetch(url);
         if (!resposta.ok) throw new Error("Erro ao acessar a API");
 
@@ -18,12 +39,17 @@ async function buscarClima() {
 
         console.log(`Dados recebidos - Temp: ${temp}, Code: ${code}, Sensacao: ${sensacao}`);
 
-        exibirNaTela(temp, code, umidade, vento, sensacao);
+        exibirNaTela(name, temp, code, umidade, vento, sensacao);
+
     } catch (error) {
         console.error("Erro ao buscar dados:", error);
-        const elCondicao = document.getElementById('descricao')
-        if (elCondicao) elCondicao.textContent = "Erro ao carregar dados";
+        const elCondicao = document.getElementById('descricao');
+        if (elCondicao) elCondicao.textContent = error.message;
     }
+}
+
+function normalizaTexto(texto){
+    return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
 function traduzirCodigoTempo(codigo) {
@@ -63,7 +89,7 @@ function getOpenWeatherIcon(codigoMeteo) { //isso aqui pega o codigo do openMete
 }
 
 
-function exibirNaTela(temp, code, umidade, vento, sensacao) {
+function exibirNaTela(name, temp, code, umidade, vento, sensacao) {
     // 1. Localizar os elementos do DOM (IDs do seu HTML)
     const elCidade = document.getElementById('cidade');
     const elTemp = document.getElementById('temperatura');
@@ -79,7 +105,7 @@ function exibirNaTela(temp, code, umidade, vento, sensacao) {
     const urlIcone = getOpenWeatherIcon(code);
 
     // 3. Atualizar os textos na tela
-    if (elCidade) elCidade.textContent = "Porto Alegre";
+    if (elCidade) elCidade.textContent = name;
     if (elTemp) elTemp.textContent = `${Math.round(temp)}`;
     if (elCondicao) elCondicao.textContent = textoCondicao;
     if (elUmidade) elUmidade.textContent = `${Math.round(umidade)}`;
@@ -100,5 +126,19 @@ function exibirNaTela(temp, code, umidade, vento, sensacao) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', buscarClima);
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('formulario-busca-clima');
+    const inputCidade = document.getElementById('cityInput');
+
+    if (form && inputCidade) {
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const cidade = inputCidade.value.trim();
+            if (!cidade) return;
+            buscarClima(cidade);
+        });
+
+        buscarClima('Porto Alegre');
+    }
+});
 
