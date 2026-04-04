@@ -107,7 +107,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const cidade = document.getElementById('cityInput').value.trim();
         if (cidade) buscarPorCidade(cidade);
     });
+    async function buscarPorCidade(cidade) {
+        try {
+            const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cidade)}&count=1&language=pt&format=json`;
+            const geoResp = await fetch(geoUrl);
+            const geoData = await geoResp.json();
+    
+            if (!geoData.results || geoData.results.length === 0) {
+                alert("Cidade não encontrada!");
+                return;
+            }
+    
+            const { latitude, longitude, name } = geoData.results[0];
+            await buscarClima(latitude, longitude, name);
+    
+        } catch (error) {
+            console.error("Erro ao buscar cidade:", error);
+        }
+    }
+    
 });
-
-
-
