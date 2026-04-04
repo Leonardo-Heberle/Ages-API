@@ -1,8 +1,7 @@
 //desconsiderar a url se formos usar outra api.
-async function buscarClima() {
+async function buscarClima(lat = -30.03, lon = -51.23, nomeCidade = "Porto Alegre"){
     //coordenadas mockadas,
-    const lat = -30.03;
-    const lon = -51.23
+    
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m,apparent_temperature&timezone=auto`;
     try {
         const resposta = await fetch(url);
@@ -18,7 +17,7 @@ async function buscarClima() {
 
         console.log(`Dados recebidos - Temp: ${temp}, Code: ${code}, Sensacao: ${sensacao}`);
 
-        exibirNaTela(temp, code, umidade, vento, sensacao);
+        exibirNaTela(temp, code, umidade, vento, sensacao, nomeCidade);
     } catch (error) {
         console.error("Erro ao buscar dados:", error);
         const elCondicao = document.getElementById('descricao')
@@ -63,7 +62,7 @@ function getOpenWeatherIcon(codigoMeteo) { //isso aqui pega o codigo do openMete
 }
 
 
-function exibirNaTela(temp, code, umidade, vento, sensacao) {
+function exibirNaTela(temp, code, umidade, vento, sensacao, nomeCidade) {
     // 1. Localizar os elementos do DOM (IDs do seu HTML)
     const elCidade = document.getElementById('cidade');
     const elTemp = document.getElementById('temperatura');
@@ -79,7 +78,7 @@ function exibirNaTela(temp, code, umidade, vento, sensacao) {
     const urlIcone = getOpenWeatherIcon(code);
 
     // 3. Atualizar os textos na tela
-    if (elCidade) elCidade.textContent = "Porto Alegre";
+    if (elCidade) elCidade.textContent = nomeCidade;
     if (elTemp) elTemp.textContent = `${Math.round(temp)}`;
     if (elCondicao) elCondicao.textContent = textoCondicao;
     if (elUmidade) elUmidade.textContent = `${Math.round(umidade)}`;
@@ -100,5 +99,15 @@ function exibirNaTela(temp, code, umidade, vento, sensacao) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', buscarClima);
+document.addEventListener('DOMContentLoaded', () => {
+    buscarClima();
+
+    document.getElementById('formulario-busca-clima').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const cidade = document.getElementById('cityInput').value.trim();
+        if (cidade) buscarPorCidade(cidade);
+    });
+});
+
+
 
