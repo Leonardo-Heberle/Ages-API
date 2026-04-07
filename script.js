@@ -1,8 +1,14 @@
 //desconsiderar a url se formos usar outra api.
-async function buscarClima(lat = -30.03, lon = -51.23, nomeCidade = "Porto Alegre"){
-    //coordenadas mockadas,
-    
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m,apparent_temperature&timezone=auto`;
+async function buscarClima(lat = -30.03, lon = -51.23, nomeCidade = "Porto Alegre", mostrarLoading = false) {
+    const elLoading = document.getElementById('loading');
+    const elConteudo = document.getElementById('weatherContent');
+
+    //esconder o conteudo e mostrar o loading
+    if (mostrarLoading) {
+        if (elLoading) elLoading.classList.remove('hidden');
+    }
+
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m,apparent_temperature&timezone=auto&models=icon_global`;
     try {
         const resposta = await fetch(url);
         if (!resposta.ok) throw new Error("Erro ao acessar a API");
@@ -18,10 +24,15 @@ async function buscarClima(lat = -30.03, lon = -51.23, nomeCidade = "Porto Alegr
         console.log(`Dados recebidos - Temp: ${temp}, Code: ${code}, Sensacao: ${sensacao}`);
 
         exibirNaTela(temp, code, umidade, vento, sensacao, nomeCidade);
+
+
     } catch (error) {
         console.error("Erro ao buscar dados:", error);
-        const elCondicao = document.getElementById('descricao')
-        if (elCondicao) elCondicao.textContent = "Erro ao carregar dados";
+        if (elLoading) elLoading.innerHTML = "<p>Erro ao carregar dados.<p>";
+    } finally {
+        // Garante que o loading seja removido, mesmo em caso de erro.
+        if (elLoading) elLoading.classList.add('hidden');
+        if (elConteudo) elConteudo.classList.remove('hidden');
     }
 }
 
@@ -30,35 +41,59 @@ function traduzirCodigoTempo(codigo) {
         0: "Céu limpo",
         1: "Principalmente limpo",
         2: "Parcialmente nublado",
-        3: "Encoberto",
+        3: "Nublado",
         45: "Nevoeiro",
         51: "Garoa leve",
         61: "Chuva leve",
         63: "Chuva moderada",
+        71: "Neve leve",
+        73: "Neve moderada",
+        75: "Neve forte",
+        77: "Grãos de neve",
         80: "Pancadas de chuva",
+        85: "pancadas de neve leves",
+        86: "Pancadas de neve fortes",
         95: "Trovoada"
     };
     return interpretacao[codigo] || "Condição desconhecida";
 }
 
-function getOpenWeatherIcon(codigoMeteo) { //isso aqui pega o codigo do openMeteo e mando pro OpenWeather que tem a biblioteca de icones
-    // MAPEAMENTO: Código Open-Meteo -> Código de Imagem OpenWeather
+function getOpenWeatherIcon(codigoMeteo) {
+    // Biblioteca com SVGs coloridos e estilo animado.
+    const iconBase = "https://www.amcharts.com/wp-content/themes/amcharts4/css/img/icons/weather/animated";
     const mapeamento = {
-        0: "01d",  // Céu limpo -> sun.png
-        1: "02d",  // Principalmente limpo -> partly-cloudy.png
-        2: "03d",  // Parcialmente nublado -> cloudy.png
-        3: "04d",  // Encoberto -> broken-clouds.png
-        45: "50d", // Nevoeiro -> mist.png
-        51: "09d", // Garoa -> shower-rain.png
-        61: "10d", // Chuva leve -> rain.png
-        63: "10d", // Chuva moderada
-        80: "09d", // Pancadas de chuva
-        95: "11d"  // Trovoada -> thunderstorm.png
+        0: "day.svg",
+        1: "cloudy-day-1.svg",
+        2: "cloudy-day-2.svg",
+        3: "cloudy.svg",
+        45: "cloudy.svg",
+        48: "cloudy.svg",
+        51: "rainy-1.svg",
+        53: "rainy-2.svg",
+        55: "rainy-3.svg",
+        56: "rainy-2.svg",
+        57: "rainy-3.svg",
+        61: "rainy-4.svg",
+        63: "rainy-5.svg",
+        65: "rainy-6.svg",
+        66: "snowy-1.svg",
+        67: "snowy-2.svg",
+        71: "snowy-3.svg",
+        73: "snowy-4.svg",
+        75: "snowy-5.svg",
+        77: "snowy-6.svg",
+        80: "rainy-4.svg",
+        81: "rainy-5.svg",
+        82: "rainy-6.svg",
+        85: "snowy-4.svg",
+        86: "snowy-6.svg",
+        95: "thunder.svg",
+        96: "thunder.svg",
+        99: "thunder.svg"
     };
-    // Pega o código da imagem ou usa "01d" (sol) como padrão de segurança
-    const iconCode = mapeamento[codigoMeteo] || "01d";
-    const url = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-    return url;
+
+    const iconFile = mapeamento[codigoMeteo] || "cloudy-day-1.svg";
+    return `${iconBase}/${iconFile}`;
 }
 
 
@@ -112,18 +147,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cidade)}&count=1&language=pt&format=json`;
             const geoResp = await fetch(geoUrl);
             const geoData = await geoResp.json();
-    
+
             if (!geoData.results || geoData.results.length === 0) {
                 alert("Cidade não encontrada!");
                 return;
             }
-    
+
             const { latitude, longitude, name } = geoData.results[0];
-            await buscarClima(latitude, longitude, name);
-    
+            await buscarClima(latitude, longitude, name, true);
+
         } catch (error) {
             console.error("Erro ao buscar cidade:", error);
         }
     }
-    
+
 });
