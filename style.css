@@ -1,17 +1,26 @@
+/* Reset básico - remove margens e espaçamentos padrão do navegador */
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  box-sizing: border-box; /* Inclui padding e border no tamanho total do elemento */
 }
 
+/* Container principal da aplicação */
 #app-clima {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #38bdf8 0%, #3b82f6 50%, #6366f1 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, sans-serif;
+  min-height: 100vh; /* Altura mínima de 100% da viewport */
+  background: linear-gradient(
+    135deg,
+    #38bdf8 0%,
+    #3b82f6 50%,
+    #6366f1 100%
+  ); /* Gradiente azul */
+  display: flex; /* Flexbox para centralizar conteúdo */
+  align-items: center; /* Centraliza verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+  padding: 1.5rem; /* Espaçamento interno */
 }
 
 .hidden {
@@ -47,97 +56,376 @@
   margin-bottom: 8px;
 }
 
+/* Container que limita a largura do conteúdo */
 .container-clima {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1200px; /* Largura máxima */
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: column; /* Elementos empilhados verticalmente */
+  align-items: center; /* Centraliza elementos */
 }
 
+/* === CABEÇALHO === */
 .header-clima {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2rem; /* Espaço abaixo do cabeçalho */
 }
 
 .header-clima h1 {
-  font-size: 3rem;
-  font-weight: 700;
-  color: #fff;
+  font-size: 3rem; /* Tamanho grande do título */
+  font-weight: bold;
+  color: white;
   margin-bottom: 0.5rem;
 }
 
 .subtitulo-clima {
-  color: #dbeafe;
+  color: #dbeafe; /* Azul claro */
   font-size: 1.125rem;
 }
 
+/* === BARRA DE BUSCA === */
 .container-busca-clima {
   width: 100%;
-  max-width: 46rem;
+  max-width: 28rem; /* Largura máxima da barra de busca */
   margin-bottom: 2rem;
 }
 
-.input-busca-clima {
+.formulario-busca-clima {
+  position: relative; /* Posicionamento relativo para o botão absoluto dentro */
+}
+
+.imput-busca-clima {
   width: 100%;
+  padding: 1rem 3.5rem 1rem 1.5rem; /* Espaçamento: topo, direita (espaço para botão), baixo, esquerda */
+  border-radius: 9999px; /* Bordas totalmente arredondadas */
+  background: rgba(
+    255,
+    255,
+    255,
+    0.9
+  ); /* Branco semi-transparente */
+  backdrop-filter: blur(10px); /* Efeito de desfoque no fundo */
+  border: none;
+  font-size: 1rem;
+  color: #1f2937; /* Cinza escuro para o texto */
+  outline: none; /* Remove contorno padrão */
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04); /* Sombra suave */
+}
+
+.imput-busca-clima::placeholder {
+  color: #6b7280; /* Cinza médio para placeholder */
+}
+
+.imput-busca-clima:focus {
+  outline: 2px solid white; /* Contorno branco ao focar */
+  outline-offset: 2px; /* Espaço entre o input e o contorno */
+}
+
+.botao-busca-clima {
+  position: absolute; /* Posicionado dentro do input */
+  right: 0.5rem; /* Distância da borda direita */
+  top: 50%; /* 50% do topo */
+  transform: translateY(-50%); /* Centraliza verticalmente */
+  background: #3b82f6; /* Azul */
+  border: none;
+  border-radius: 9999px; /* Totalmente arredondado */
+  width: 3rem;
+  height: 3rem;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: center;
+  cursor: pointer; /* Mostra cursor de mão ao passar */
+  color: white;
+  transition: background-color 0.3s; /* Transição suave na cor de fundo */
 }
 
-#cityInput {
-  flex: 1;
-  min-height: 64px;
-  padding: 0 1.5rem;
-  border: none;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(10px);
-  font-size: 1.1rem;
-  color: #1f2937;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  outline: none;
+.botao-busca-clima:hover {
+  background: #2563eb; /* Azul mais escuro ao passar o mouse */
 }
 
-#cityInput::placeholder {
-  color: #6b7280;
+/* === MENSAGEM DE ERRO === */
+.mensagem-erro-clima {
+  background: rgba(
+    239,
+    68,
+    68,
+    0.9
+  ); /* Vermelho semi-transparente */
+  backdrop-filter: blur(10px); /* Desfoque no fundo */
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem; /* Bordas arredondadas */
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* Espaço entre ícone e texto */
+  max-width: 28rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); /* Sombra */
 }
 
-#cityInput:focus {
-  outline: none;
+.mensagem-erro-clima.oculto {
+  display: none; /* Esconde o elemento */
 }
 
-#Buscar {
-  min-width: 64px;
-  min-height: 64px;
-  border: none;
-  border-radius: 9999px;
-  background: #2563eb;
-  color: #fff;
-  cursor: pointer;
-  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
-}
-
+/* === CONTEÚDO DO CLIMA === */
 .container-clima-atual {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  border-radius: 1.5rem;
-  padding: 2rem;
-  color: #fff;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem; /* Espaço entre elementos */
   width: 100%;
-  max-width: 32rem;
+}
+
+/* === CARD PRINCIPAL DO CLIMA === */
+.card-clima {
+  background: linear-gradient(
+    135deg,
+    #3b82f6 0%,
+    #1d4ed8 100%
+  ); /* Gradiente azul */
+  border-radius: 1.5rem; /* Bordas bem arredondadas */
+  padding: 2rem;
+  color: white;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* Sombra profunda */
+  width: 100%;
+  max-width: 28rem;
+}
+
+/* Cabeçalho do card (nome da cidade e data) */
+.cabecalho-card-clima {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.cabecalho-card-clima h2 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.data-clima {
+  color: #dbeafe; /* Azul claro */
+  font-size: 0.875rem;
+}
+
+/* Seção principal com ícone e temperatura */
+.principal-clima {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
 }
 
 .icone-clima {
-  width: 120px;
-  height: 120px;
+  width: 6rem;
+  height: 6rem;
   display: flex;
+  align-items: center;
   justify-content: center;
+  margin-right: 1.5rem; /* Espaço entre ícone e temperatura */
+}
+
+.icone-clima-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+/* Informações de temperatura */
+.info-temperatura-clima {
+  display: flex;
+  flex-direction: column;
+}
+
+.temperatura-clima {
+  font-size: 3.75rem; /* Tamanho grande para a temperatura */
+  font-weight: bold;
+}
+
+.condicao-clima {
+  font-size: 1.25rem;
+  color: #dbeafe;
+  margin-top: 0.5rem;
+}
+
+.sensacao-clima {
+  font-size: 0.875rem;
+  color: #bfdbfe; /* Azul bem claro */
+  margin-top: 0.25rem;
+}
+
+/* Grid com detalhes (umidade, vento, visibilidade) */
+.detalhes-clima {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas iguais */
+  gap: 1rem; /* Espaço entre colunas */
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(219, 234, 254, 0.3); /* Linha separadora no topo */
+}
+
+/* Cada item de detalhe */
+.item-detalhe-clima {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.item-detalhe-clima svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #bfdbfe;
+}
+
+.rotulo-detalhe-clima {
+  font-size: 0.875rem;
+  color: #dbeafe;
+}
+
+.valor-detalhe-clima {
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+/* === SEÇÃO DE PREVISÃO === */
+.secao-previsao-clima {
+  width: 100%;
+  max-width: 56rem; /* Largura máxima da seção */
+}
+
+.titulo-previsao-clima {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Grid responsivo para cards de previsão */
+.grid-previsao-clima {
+  display: grid;
+  grid-template-columns: repeat(
+    2,
+    1fr
+  ); /* 2 colunas em telas pequenas */
+  gap: 1rem;
+}
+
+/* 4 colunas em telas médias ou maiores */
+@media (min-width: 768px) {
+  .grid-previsao-clima {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Card individual de previsão */
+.card-previsao-clima {
+  background: rgba(
+    255,
+    255,
+    255,
+    0.1
+  ); /* Branco semi-transparente */
+  backdrop-filter: blur(10px); /* Desfoque no fundo */
+  border-radius: 1rem;
+  padding: 1.5rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s; /* Transição suave em todas as propriedades */
+}
+
+.card-previsao-clima:hover {
+  background: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ); /* Mais opaco ao passar o mouse */
+}
+
+.dia-previsao-clima {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.icone-previsao-clima {
+  width: 2rem;
+  height: 2rem;
+}
+
+.condicao-previsao-clima {
+  font-size: 0.75rem;
+  color: #dbeafe;
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Container das temperaturas (máxima e mínima) */
+.temperaturas-previsao-clima {
+  display: flex;
+  gap: 0.5rem; /* Espaço entre máxima e mínima */
   align-items: center;
 }
 
-.icone-clima img {
-  display: block;
-  max-width: 100%;
-  height: auto;
+.maxima-previsao-clima {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.minima-previsao-clima {
+  font-size: 0.875rem;
+  color: #bfdbfe; /* Cor mais clara para a mínima */
+}
+
+/* === NOTA DE RODAPÉ === */
+.nota-rodape-clima {
+  margin-top: 3rem;
+  text-align: center;
+  color: rgba(
+    255,
+    255,
+    255,
+    0.7
+  ); /* Branco semi-transparente */
+  font-size: 0.875rem;
+  max-width: 28rem;
+}
+
+.nota-rodape-clima code {
+  background: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ); /* Fundo para destaque de código */
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+/* === RESPONSIVIDADE === */
+/* Ajustes para telas pequenas (celulares) */
+@media (max-width: 640px) {
+  .header-clima h1 {
+    font-size: 2rem; /* Título menor em telas pequenas */
+  }
+
+  .card-clima {
+    padding: 1.5rem; /* Menos padding */
+  }
+
+  .temperatura-clima {
+    font-size: 3rem; /* Temperatura menor */
+  }
+
+  .icone-clima {
+    width: 4rem; /* Ícone menor */
+    height: 4rem;
+  }
 }
