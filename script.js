@@ -1,14 +1,69 @@
 //desconsiderar a url se formos usar outra api.
-async function buscarClima(lat = -30.03, lon = -51.23, nomeCidade = "Porto Alegre", mostrarLoading = false) {
-    const elLoading = document.getElementById('loading');
-    const elConteudo = document.getElementById('weatherContent');
+const accessKey = "bUq3jXANyH6Rj0q8TMMy2Kb7m_5TVa87nRnz_XJq8Lw";
+let paginaAtual = 1;
+let termoAtual = "";
 
-    //esconder o conteudo e mostrar o loading
-    if (mostrarLoading) {
-        if (elLoading) elLoading.classList.remove('hidden');
+function aplicarImagemDeFundo(urlImagem) {
+    const app = document.getElementById("app-clima");
+    if (!app || !urlImagem) return;
+
+    app.style.backgroundImage = `linear-gradient(rgba(15, 23, 42, 0.45), rgba(15, 23, 42, 0.55)), url("${urlImagem}")`;
+    app.style.backgroundSize = "cover";
+    app.style.backgroundPosition = "center";
+    app.style.backgroundRepeat = "no-repeat";
+}
+
+async function buscarImagens(novaBusca = true, termoForcado = "") {
+    const termoInput = document.getElementById("cityInput")?.value.trim() || "";
+    const termo = termoForcado || termoInput;
+    const galeria = document.getElementById("galeria");
+
+    if (novaBusca && !termo) {
+        if (galeria) galeria.innerHTML = "<p>Digite uma cidade para buscar imagens.</p>";
+        return;
+    }
+    
+    if(novaBusca){
+        paginaAtual = 1;
+        termoAtual = termo;
+        if (galeria) galeria.innerHTML = "<p>Carregando imagem de fundo...</p>";
+    }else{
+        paginaAtual++
     }
 
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m,apparent_temperature&timezone=auto&models=icon_global`;
+    try{
+        const resposta = await fetch(
+            `https://api.unsplash.com/search/photos?page=${paginaAtual}&per_page=1&query=${encodeURIComponent(termoAtual)}&orientation=landscape&client_id=${accessKey}`
+        );
+
+        if (!resposta.ok) {
+            throw new Error(`Unsplash respondeu com status ${resposta.status}`);
+        }
+
+        const dados = await resposta.json();
+        const imagem = dados.results?.[0];
+
+        if (!imagem) {
+            if (galeria) galeria.innerHTML = "<p>Nenhuma imagem encontrada para essa cidade.</p>";
+            return;
+        }
+
+        aplicarImagemDeFundo(imagem.urls.regular || imagem.urls.full || imagem.urls.small);
+
+        if (galeria) {
+            galeria.innerHTML = "";
+        }
+         
+    }catch (erro){
+        if (galeria) galeria.innerHTML = "<p>Erro ao carregar imagem</p>";
+        console.error("Erro na API",erro);
+    }
+}
+
+async function buscarClima(lat = -30.03, lon = -51.23, nomeCidade = "Porto Alegre"){
+    //coordenadas mockadas,
+    
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m,apparent_temperature&timezone=auto`;
     try {
         const resposta = await fetch(url);
         if (!resposta.ok) throw new Error("Erro ao acessar a API");
@@ -136,11 +191,15 @@ function exibirNaTela(temp, code, umidade, vento, sensacao, nomeCidade) {
 
 document.addEventListener('DOMContentLoaded', () => {
     buscarClima();
+    buscarImagens(true, "Porto Alegre");
 
     document.getElementById('formulario-busca-clima').addEventListener('submit', (e) => {
         e.preventDefault();
         const cidade = document.getElementById('cityInput').value.trim();
-        if (cidade) buscarPorCidade(cidade);
+        if (cidade) {
+            buscarPorCidade(cidade);
+            buscarImagens(true, cidade);
+        }
     });
     async function buscarPorCidade(cidade) {
         try {
